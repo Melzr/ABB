@@ -100,7 +100,7 @@ int main(){
     auxiliar->clave = 3;
     printf("Busco el elemento (3): %s\n", ((cosa*)arbol_buscar(arbol, auxiliar))->clave==3?"SI":"NO");
 
-    cosa* elementos[10];
+    /*cosa* elementos[10];
 
     printf("Recorrido inorden (deberian salir en orden 1 3 5): ");
     size_t cantidad = arbol_recorrido_inorden(arbol, (void**)elementos, 10);
@@ -153,7 +153,7 @@ int main(){
     acumulador=0;
     printf("Recorrido postorden acumulando los valores: ");    
     abb_con_cada_elemento(arbol, ABB_RECORRER_POSTORDEN, mostrar_acumulado, &acumulador);
-    printf("\n");
+    printf("\n");*/
     
     free(auxiliar);
     arbol_destruir(arbol);
