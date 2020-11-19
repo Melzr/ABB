@@ -81,15 +81,6 @@ int main(){
     arbol_insertar(arbol, c7);
 
     printf("El nodo raiz deberia ser 4: %s\n", ((cosa*)arbol_raiz(arbol))->clave==4?"SI":"NO");
-
-    if (arbol->nodo_raiz->izquierda->elemento == c2) printf("izq 2\n");
-    if (arbol->nodo_raiz->derecha->elemento == c6) printf("der 6\n");
-    if (arbol->nodo_raiz->izquierda->izquierda->elemento == c1) printf("izq izq 1\n");
-    if (arbol->nodo_raiz->izquierda->derecha->elemento == c3) printf("izq der 3\n");
-    if (arbol->nodo_raiz->derecha->derecha->elemento == c7) printf("der der 7\n");
-    if (arbol->nodo_raiz->derecha->izquierda->elemento == c5) printf("der izq 5\n");
-
-
     
     auxiliar->clave = 5;
     printf("Busco el elemento 5: %s\n", ((cosa*)arbol_buscar(arbol, auxiliar))->clave==5?"SI":"NO");
@@ -97,72 +88,109 @@ int main(){
     auxiliar->clave = 7;
     printf("Borro nodo hoja (7): %s\n", (arbol_borrar(arbol, auxiliar))==0?"SI":"NO");
 
-
-     printf("El nodo raiz deberia ser 4: %s\n", ((cosa*)arbol_raiz(arbol))->clave==4?"SI":"NO");
-    if (arbol->nodo_raiz->izquierda->elemento == c2) printf("izq 2\n");
-    if (arbol->nodo_raiz->derecha->elemento == c6) printf("der 6\n");
-    if (arbol->nodo_raiz->izquierda->izquierda->elemento == c1) printf("izq izq 1\n");
-    if (arbol->nodo_raiz->izquierda->derecha->elemento == c3) printf("izq der 3\n");
-    if (arbol->nodo_raiz->derecha->izquierda->elemento == c5) printf("der izq 5\n");
-
-
-
     auxiliar->clave = 6;
     printf("Borro nodo con un hijo (6): %s\n", (arbol_borrar(arbol, auxiliar))==0?"SI":"NO");
-
-
-    printf("El nodo raiz deberia ser 4: %s\n", ((cosa*)arbol_raiz(arbol))->clave==4?"SI":"NO");
-    if (arbol->nodo_raiz->izquierda->elemento == c2) printf("izq 2\n");
-    if (arbol->nodo_raiz->derecha->elemento == c5) printf("der 5\n");
-    if (arbol->nodo_raiz->izquierda->izquierda->elemento == c1) printf("izq izq 1\n");
-    if (arbol->nodo_raiz->izquierda->derecha->elemento == c3) printf("izq der 3\n");
-
 
     auxiliar->clave = 2;
     printf("Borro nodo con dos hijos (2): %s\n", (arbol_borrar(arbol, auxiliar))==0?"SI":"NO");
 
-
-
-    printf("El nodo raiz deberia ser 4: %s\n", ((cosa*)arbol_raiz(arbol))->clave==4?"SI":"NO");
-    if (arbol->nodo_raiz->derecha->elemento == c5) printf("der 5\n");
-    if (arbol->nodo_raiz->izquierda->elemento == c1) printf("izq 1\n");
-    if (arbol->nodo_raiz->izquierda->derecha->elemento == c3) printf("izq der 3\n");
-
-
-
     auxiliar->clave = 4;
     printf("Borro la raiz (4): %s\n", (arbol_borrar(arbol, auxiliar))==0?"SI":"NO");
-
-
-    if (arbol->nodo_raiz->elemento == c3) printf("raiz 3\n");
-    if (arbol->nodo_raiz->derecha->elemento == c5) printf("der 5\n");
-    if (arbol->nodo_raiz->izquierda->elemento == c1) printf("izq 1\n");
-
-
 
     auxiliar->clave = 3;
     printf("Busco el elemento (3): %s\n", ((cosa*)arbol_buscar(arbol, auxiliar))->clave==3?"SI":"NO");
 
-    cosa* elementos[10];
+    if (arbol->nodo_raiz->elemento == c3) printf("raiz 3\n");
+    if (arbol->nodo_raiz->izquierda->elemento == c1) printf("izq 1\n");
+    if (arbol->nodo_raiz->derecha->elemento == c5) printf("der 5 \n");
 
+    cosa* elementos[10];
     printf("Recorrido inorden (deberian salir en orden 1 3 5): ");
     size_t cantidad = arbol_recorrido_inorden(arbol, (void**)elementos, 10);
     for(size_t i=0;i<cantidad;i++)
         printf("%i ", elementos[i]->clave);
     printf("\n");
 
+    cosa* c15 = crear_cosa(15);
+    cosa* c0 = crear_cosa(0);
+    cosa* c9 = crear_cosa(9);
+    c4 = crear_cosa(4);
+    c7 = crear_cosa(7);
 
     printf("\n\nInserto mas valores y pruebo el iterador interno\n\n");
-    arbol_insertar(arbol, crear_cosa(15));
-    arbol_insertar(arbol, crear_cosa(0));
-    arbol_insertar(arbol, crear_cosa(9));
-    arbol_insertar(arbol, crear_cosa(7));
-    arbol_insertar(arbol, crear_cosa(4));
 
+    arbol_insertar(arbol, c0);
+    arbol_insertar(arbol, c4);
+    arbol_insertar(arbol, c15);
+    arbol_insertar(arbol, c9);
+    arbol_insertar(arbol, c7);
+
+    if (arbol->nodo_raiz->elemento == c3) printf("raiz 3\n");
+    if (arbol->nodo_raiz->izquierda->elemento == c1) printf("izq 1\n");
+    if (arbol->nodo_raiz->izquierda->izquierda->elemento == c0) printf("izq izq 0\n");
+    if (arbol->nodo_raiz->derecha->elemento == c5) printf("der 5 \n");
+    if (arbol->nodo_raiz->derecha->izquierda->elemento == c4) printf("der izq 4\n");
+    if (arbol->nodo_raiz->derecha->derecha->elemento == c15) printf("der der 15\n");
+    if (arbol->nodo_raiz->derecha->derecha->izquierda->elemento == c9) printf("der der izq 9\n");
+    if (arbol->nodo_raiz->derecha->derecha->izquierda->izquierda->elemento == c7) printf("der der izq izq 7\n");
     
     printf("Recorrido inorden iterador interno: ");    
     abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, mostrar_elemento, NULL);
     printf("\n");
+
+
+    cosa* elementoss[10];
+    printf("Recorrido inorden (deberian salir en orden 0 1 3 4 5 7 9 15): ");
+    size_t cantidadd = arbol_recorrido_inorden(arbol, (void**)elementoss, 10);
+    for(size_t i=0;i<cantidadd;i++)
+        printf("%i ", elementoss[i]->clave);
+    printf("\n");
+
+    cosa* elementosss[10];
+    printf("Recorrido preorden (deberian salir en orden 3 1 0 5 4 15 9): ");
+    size_t cantidaddd = arbol_recorrido_preorden(arbol, (void**)elementosss, 7);
+    for(size_t i=0;i<cantidaddd;i++)
+        printf("%i ", elementosss[i]->clave);
+    printf("\n");
+
+    cosa* elementossss[10];
+    printf("Recorrido postorden (deberian salir en orden 0 1 4 7 9 15): ");
+    size_t cantidadddd = arbol_recorrido_postorden(arbol, (void**)elementossss, 6);
+    for(size_t i=0;i<cantidadddd;i++)
+        printf("%i ", elementossss[i]->clave);
+    printf("\n");
+
+
+
+    printf("Borro la raiz (3): %s\n", (arbol_borrar(arbol, c3))==0?"SI":"NO");
+
+    if (arbol->nodo_raiz->elemento == c1) printf("raiz 1\n");
+    if (arbol->nodo_raiz->izquierda->elemento == c0) printf("izq 0\n");
+    if (arbol->nodo_raiz->derecha->elemento == c5) printf("der 5 \n");
+    if (arbol->nodo_raiz->derecha->izquierda->elemento == c4) printf("der izq 4\n");
+    if (arbol->nodo_raiz->derecha->derecha->elemento == c15) printf("der der 15\n");
+    if (arbol->nodo_raiz->derecha->derecha->izquierda->elemento == c9) printf("der der izq 9\n");
+    if (arbol->nodo_raiz->derecha->derecha->izquierda->izquierda->elemento == c7) printf("der der izq izq 7\n");
+
+    printf("Borro la raiz (1): %s\n", (arbol_borrar(arbol, c1))==0?"SI":"NO");
+
+
+    if (arbol->nodo_raiz->elemento == c0) printf("raiz 0\n");
+    if (arbol->nodo_raiz->derecha->elemento == c5) printf("der 5 \n");
+    if (arbol->nodo_raiz->derecha->izquierda->elemento == c4) printf("der izq 4\n");
+    if (arbol->nodo_raiz->derecha->derecha->elemento == c15) printf("der der 15\n");
+    if (arbol->nodo_raiz->derecha->derecha->izquierda->elemento == c9) printf("der der izq 9\n");
+    if (arbol->nodo_raiz->derecha->derecha->izquierda->izquierda->elemento == c7) printf("der der izq izq 7\n");
+
+
+    printf("Borro la raiz (0): %s\n", (arbol_borrar(arbol, c0))==0?"SI":"NO");
+
+    if (arbol->nodo_raiz->elemento == c5) printf("raiz 5\n");
+    if (arbol->nodo_raiz->izquierda == NULL) printf("izq NULL\n");
+    if (arbol->nodo_raiz->derecha->elemento == c15) printf("der 15\n");
+    if (arbol->nodo_raiz->izquierda->elemento == c4) printf("izq 4\n");
+    if (arbol->nodo_raiz->derecha->izquierda->elemento == c9) printf("der izq 9\n");
+    if (arbol->nodo_raiz->derecha->izquierda->izquierda->elemento == c7) printf("der izq izq 7\n");
 
     /*printf("Recorrido preorden iterador interno: ");    
     abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, mostrar_elemento, NULL);
@@ -201,5 +229,6 @@ int main(){
     
     free(auxiliar);
     arbol_destruir(arbol);
+
     return 0;
 }
