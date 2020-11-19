@@ -371,49 +371,63 @@ size_t iterar_inorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void
 	if (!raiz || !funcion)
 		return 0;
 
-	if ( (raiz->izquierda != NULL) && (funcion(raiz->izquierda->elemento, extra) == false) )
+	if (raiz->izquierda != NULL)
 		iterar_inorden(raiz->izquierda, recorridos, funcion, extra);
 
-	if (funcion(raiz->elemento, extra) == false)
-		(*recorridos)++;
+	if (funcion(raiz->elemento, extra) == true)
+		return *recorridos;
+	(*recorridos)++;
 
-	if ( (raiz->derecha != NULL) && (funcion(raiz->derecha->elemento, extra) == false) ) 
+	if (raiz->derecha != NULL) 
 		iterar_inorden(raiz->derecha, recorridos, funcion, extra);
 	
 	return *recorridos;
 }
 
 /*
-size_t recorrido_indorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array, size_t *contador) {
-	if (!raiz)
+ * 
+ *
+ */
+size_t iterar_preorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra) {
+	if (!raiz || !funcion)
 		return 0;
 
-	if ( (raiz->izquierda != NULL) && (*contador < tamanio_array) )
-		recorrido_indorden_aux(raiz->izquierda, array, tamanio_array, contador);
-	
+	if (funcion(raiz->elemento, extra) == true)
+		return *recorridos;
+	(*recorridos)++;
 
-	if (*contador < tamanio_array) {
-		array[*contador] = raiz->elemento;
-		(*contador)++;
-	}
+	if (raiz->izquierda != NULL)
+		iterar_preorden(raiz->izquierda, recorridos, funcion, extra);
 
-	if ((raiz->derecha != NULL) && (*contador < tamanio_array) )
-		recorrido_indorden_aux(raiz->derecha, array, tamanio_array, contador);
+	if (raiz->derecha != NULL) 
+		iterar_preorden(raiz->derecha, recorridos, funcion, extra);
 
-	return *contador;
-}*/
+	return *recorridos;
+}
 
 /*
- * Iterador interno. Recorre el arbol e invoca la funcion con cada
- * elemento del mismo. El puntero 'extra' se pasa como segundo
- * parámetro a la función. Si la función devuelve true, se finaliza el
- * recorrido aun si quedan elementos por recorrer. Si devuelve false
- * se sigue recorriendo mientras queden elementos.
- * El recorrido se realiza de acuerdo al recorrido solicitado.  Los
- * recorridos válidos son: ABB_RECORRER_INORDEN, ABB_RECORRER_PREORDEN
- * y ABB_RECORRER_POSTORDEN.
- * Devuelve la cantidad de elementos que fueron recorridos.
-*/
+ *
+ *
+ */
+size_t iterar_postorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra) {
+
+	if (!raiz || !funcion)
+		return 0;
+
+	if (raiz->izquierda != NULL)
+		iterar_postorden(raiz->izquierda, recorridos, funcion, extra);
+
+	if (raiz->derecha != NULL) 
+		iterar_postorden(raiz->derecha, recorridos, funcion, extra);
+
+	if (funcion(raiz->elemento, extra) == true)
+		return *recorridos;
+
+	(*recorridos)++;
+
+	return *recorridos;
+}
+
 size_t abb_con_cada_elemento(abb_t* arbol, int recorrido, bool (*funcion)(void*, void*), void* extra) {
 
 	if (!arbol || !funcion)
@@ -424,9 +438,14 @@ size_t abb_con_cada_elemento(abb_t* arbol, int recorrido, bool (*funcion)(void*,
 
 	size_t recorridos = 0;
 
-	if (recorrido == ABB_RECORRER_INORDEN) {
+	if (recorrido == ABB_RECORRER_INORDEN)
 		return iterar_inorden(arbol->nodo_raiz, &recorridos, funcion, extra);
-	}
+
+	if (recorrido == ABB_RECORRER_PREORDEN)
+		return iterar_preorden(arbol->nodo_raiz, &recorridos, funcion, extra);
+
+	if (recorrido == ABB_RECORRER_POSTORDEN)
+		return iterar_postorden(arbol->nodo_raiz, &recorridos, funcion, extra);
 
 	return 0;
 }
