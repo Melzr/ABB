@@ -38,8 +38,8 @@ nodo_abb_t* crear_nodo_inicializado(void* elemento) {
 }
 
 /*
- *
- *
+ * Pre: recibe la raiz y comparador de un arbol validos, y el elemento a insertar
+ * Post: inserta el elemento manteniendo el orden y devuelve el puntero a la raiz del arbol con el elemento
  */
 nodo_abb_t* insertar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador) {
 
@@ -57,7 +57,6 @@ nodo_abb_t* insertar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador compar
 	return raiz; 
 }
 
-
 int arbol_insertar(abb_t* arbol, void* elemento) {
 
 	if ( !arbol || !elemento || !(arbol->comparador) )
@@ -69,24 +68,24 @@ int arbol_insertar(abb_t* arbol, void* elemento) {
 }
 
 /*
- *
- *
+ * Pre: recibe la raiz y el comparador de un arbol valido, y el elemento que se busca
+ * Post: devuelve un puntero al elemento buscado en el arbol o NULL en caso de no encontrarse
  */
-void* buscar_aux(abb_comparador comparador, void* elemento, nodo_abb_t* nodo_actual) {
+void* buscar_aux(abb_comparador comparador, void* elemento, nodo_abb_t* raiz) {
 
-	if (!nodo_actual)
+	if (!raiz)
 		return NULL;
 
-	int comparacion = comparador(nodo_actual->elemento, elemento);
+	int comparacion = comparador(raiz->elemento, elemento);
 
 	if ( comparacion == PRIMER_ELEMENTO_MAYOR ) 
-		return (buscar_aux(comparador, elemento, nodo_actual->izquierda));
+		return (buscar_aux(comparador, elemento, raiz->izquierda));
 	
 	if ( comparacion == PRIMER_ELEMENTO_MENOR )
-		return (buscar_aux(comparador, elemento, nodo_actual->derecha));
+		return (buscar_aux(comparador, elemento, raiz->derecha));
 
 	if (comparacion == IGUALES) {
-		return nodo_actual->elemento;
+		return raiz->elemento;
 	}
 
 	return NULL;
@@ -101,8 +100,9 @@ void* arbol_buscar(abb_t* arbol, void* elemento) {
 }
 
 /*
- * Pre: la raiz existe y no es NULL
- * 
+ * Pre: recibe una raiz valida a partir de la cual se quiere conocer el elemento mayor de su rama
+ *		recibe un puntero a nodo que se llenara con el nodo que tenga el mayor elemento de la rama (el que este mas a la derecha)
+ * Post: llena el puntero a nodo_mayor y su padre queda apuntando a NULL o a su hijo menor en casod e que tenga
  */
 nodo_abb_t* mayor_elemento_rama(nodo_abb_t* raiz, nodo_abb_t** nodo_mayor) {
 
@@ -120,9 +120,9 @@ nodo_abb_t* mayor_elemento_rama(nodo_abb_t* raiz, nodo_abb_t** nodo_mayor) {
 	return raiz;
 }
 
-/*
- *
- *
+/* 
+ * Pre: recibe la raiz y el destructor de un arbol
+ * Post: borra la raiz del arbol y devuelve un puntero a la nueva raiz
  */
 nodo_abb_t* borrar_raiz(nodo_abb_t* raiz, abb_liberar_elemento destructor) {
 
@@ -161,12 +161,13 @@ nodo_abb_t* borrar_raiz(nodo_abb_t* raiz, abb_liberar_elemento destructor) {
 }
 
 /*
- * falta el caso en que elimino la raiz
- *OJO CON LO QUE DEVUELVE
+ * Pre: recibe la raiz, comparador y destructor de un arbol, el elemento a eliminar y un puntero a un booleano false
+ *		el elemento a borrar NO PUEDE ESTAR EN LA RAIZ DEL ARBOL
+ * Post: borra el elemento del arbol, se mantiene el puntero a la raiz del mismo (sigue valiendo arbol->nodo_raiz)
  */
 nodo_abb_t* borrar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador, abb_liberar_elemento destructor, bool* borrado) {
 
-	if (!raiz) 
+	if (!raiz || !comparador || !destructor) 
 		return NULL;
 
 	int comparacion = comparador(raiz->elemento, elemento);
@@ -232,7 +233,6 @@ int arbol_borrar(abb_t* arbol, void* elemento) {
 		return ERROR;
 	}
 
-
 	bool borrado = false;
 	borrar_aux(arbol->nodo_raiz, elemento, arbol->comparador, arbol->destructor, &borrado);
 
@@ -275,6 +275,15 @@ bool arbol_vacio(abb_t* arbol) {
 }
 
 
+
+	/**************************************** RECORRER ****************************************/
+
+
+
+/*
+ * Pre: recibe la raiz de un arbol, un array con su tamanio validos, y un puntero a contador inicialmente en 0
+ * Post: recorre inorden los elementos del arbol y devuelve la cantidad de nodos recorridos
+ */
 size_t recorrido_indorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array, size_t *contador) {
 	if (!raiz)
 		return 0;
@@ -303,8 +312,8 @@ size_t arbol_recorrido_inorden(abb_t* arbol, void** array, size_t tamanio_array)
 }
 
 /*
- *
- *
+ * Pre: recibe la raiz de un arbol, un array con su tamanio validos, y un puntero a contador inicialmente en 0
+ * Post: recorre preorden los elementos del arbol y devuelve la cantidad de nodos recorridos
  */
 size_t recorrido_preorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array, size_t *contador) {
 	if (!raiz)
@@ -333,8 +342,8 @@ size_t arbol_recorrido_preorden(abb_t* arbol, void** array, size_t tamanio_array
 }
 
 /*
- *
- *
+ * Pre: recibe la raiz de un arbol, un array con su tamanio validos, y un puntero a contador inicialmente en 0
+ * Post: recorre postorden los elementos del arbol y devuelve la cantidad de nodos recorridos
  */
 size_t recorrido_postorden_aux(nodo_abb_t* raiz, void** array, size_t tamanio_array, size_t *contador) {
 	if (!raiz)
@@ -362,9 +371,16 @@ size_t arbol_recorrido_postorden(abb_t* arbol, void** array, size_t tamanio_arra
 	return recorrido_postorden_aux(arbol->nodo_raiz, array, tamanio_array, &contador);
 }
 
+
+
+	/**************************************** ITERADOR ****************************************/
+
+
+
 /*
- *
- *
+ * Pre: recibe la raiz de un arbol, un puntero a recorridos inicialmente en 0, una funcion no nula que determine hasta donde iterar,
+ *		su parametro extra, y un puntero *parar inicialmente false
+ * Post: devuelve la cantidad de veces que se pudo iterar inorden
  */
 size_t iterar_inorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra, bool* parar) {
 
@@ -389,8 +405,9 @@ size_t iterar_inorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void
 }
 
 /*
- * 
- *
+ * Pre: recibe la raiz de un arbol, un puntero a recorridos inicialmente en 0, una funcion no nula que determine hasta donde iterar,
+ *		su parametro extra, y un puntero *parar inicialmente false
+ * Post: devuelve la cantidad de veces que se pudo iterar preorden
  */
 size_t iterar_preorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra, bool* parar) {
 	if (!raiz || !funcion)
@@ -414,8 +431,9 @@ size_t iterar_preorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(voi
 }
 
 /*
- *
- *
+ * Pre: recibe la raiz de un arbol, un puntero a recorridos inicialmente en 0, una funcion no nula que determine hasta donde iterar,
+ *		su parametro extra, y un puntero *parar inicialmente false
+ * Post: devuelve la cantidad de veces que se pudo iterar postorden
  */
 size_t iterar_postorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra, bool* parar) {
 
@@ -459,6 +477,5 @@ size_t abb_con_cada_elemento(abb_t* arbol, int recorrido, bool (*funcion)(void*,
 	if (recorrido == ABB_RECORRER_POSTORDEN)
 		return iterar_postorden(arbol->nodo_raiz, &recorridos, funcion, extra, &parar);
 	
-
 	return 0;
 }
