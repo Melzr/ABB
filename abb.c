@@ -366,20 +366,24 @@ size_t arbol_recorrido_postorden(abb_t* arbol, void** array, size_t tamanio_arra
  *
  *
  */
-size_t iterar_inorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra) {
+size_t iterar_inorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra, bool* parar) {
 
 	if (!raiz || !funcion)
 		return 0;
 
 	if (raiz->izquierda != NULL)
-		iterar_inorden(raiz->izquierda, recorridos, funcion, extra);
+		iterar_inorden(raiz->izquierda, recorridos, funcion, extra, parar);
 
-	if (funcion(raiz->elemento, extra) == true)
+	if ( (*parar == false) && funcion(raiz->elemento, extra) == true) {
+		*parar = true;
 		return *recorridos;
-	(*recorridos)++;
+	}
+
+	if ((*parar) == false)
+		(*recorridos)++;
 
 	if (raiz->derecha != NULL) 
-		iterar_inorden(raiz->derecha, recorridos, funcion, extra);
+		iterar_inorden(raiz->derecha, recorridos, funcion, extra, parar);
 	
 	return *recorridos;
 }
@@ -388,19 +392,23 @@ size_t iterar_inorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void
  * 
  *
  */
-size_t iterar_preorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra) {
+size_t iterar_preorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra, bool* parar) {
 	if (!raiz || !funcion)
 		return 0;
 
-	if (funcion(raiz->elemento, extra) == true)
+	if ( (*parar == false) && funcion(raiz->elemento, extra) == true) {
+		*parar = true;
 		return *recorridos;
-	(*recorridos)++;
+	}
+
+	if ((*parar) == false)
+		(*recorridos)++;
 
 	if (raiz->izquierda != NULL)
-		iterar_preorden(raiz->izquierda, recorridos, funcion, extra);
+		iterar_preorden(raiz->izquierda, recorridos, funcion, extra, parar);
 
 	if (raiz->derecha != NULL) 
-		iterar_preorden(raiz->derecha, recorridos, funcion, extra);
+		iterar_preorden(raiz->derecha, recorridos, funcion, extra, parar);
 
 	return *recorridos;
 }
@@ -409,23 +417,26 @@ size_t iterar_preorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(voi
  *
  *
  */
-size_t iterar_postorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra) {
+size_t iterar_postorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void*, void*), void* extra, bool* parar) {
 
 	if (!raiz || !funcion)
 		return 0;
 
 	if (raiz->izquierda != NULL)
-		iterar_postorden(raiz->izquierda, recorridos, funcion, extra);
+		iterar_postorden(raiz->izquierda, recorridos, funcion, extra, parar);
 
 	if (raiz->derecha != NULL) 
-		iterar_postorden(raiz->derecha, recorridos, funcion, extra);
+		iterar_postorden(raiz->derecha, recorridos, funcion, extra, parar);
 
-	if (funcion(raiz->elemento, extra) == true)
+	if ( (*parar == false) && funcion(raiz->elemento, extra) == true) {
+		*parar = true;
 		return *recorridos;
+	}
 
-	(*recorridos)++;
+	if ((*parar) == false)
+		(*recorridos)++;
 
-	return *recorridos;
+	return (*recorridos);
 }
 
 size_t abb_con_cada_elemento(abb_t* arbol, int recorrido, bool (*funcion)(void*, void*), void* extra) {
@@ -437,15 +448,17 @@ size_t abb_con_cada_elemento(abb_t* arbol, int recorrido, bool (*funcion)(void*,
 		return 0;
 
 	size_t recorridos = 0;
+	bool parar = false;
 
 	if (recorrido == ABB_RECORRER_INORDEN)
-		return iterar_inorden(arbol->nodo_raiz, &recorridos, funcion, extra);
+		return iterar_inorden(arbol->nodo_raiz, &recorridos, funcion, extra, &parar);
 
 	if (recorrido == ABB_RECORRER_PREORDEN)
-		return iterar_preorden(arbol->nodo_raiz, &recorridos, funcion, extra);
+		return iterar_preorden(arbol->nodo_raiz, &recorridos, funcion, extra, &parar);
 
 	if (recorrido == ABB_RECORRER_POSTORDEN)
-		return iterar_postorden(arbol->nodo_raiz, &recorridos, funcion, extra);
+		return iterar_postorden(arbol->nodo_raiz, &recorridos, funcion, extra, &parar);
+	
 
 	return 0;
 }

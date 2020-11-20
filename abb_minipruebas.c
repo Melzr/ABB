@@ -51,6 +51,36 @@ bool mostrar_hasta_5(void* elemento, void* extra){
     return false;
 }
 
+bool mostrar_hasta_3(void* elemento, void* extra){
+    extra=extra; //para que no se queje el compilador, gracias -Werror -Wall
+    if(elemento){
+        printf("%i ", ((cosa*)elemento)->clave);
+        if(((cosa*)elemento)->clave == 3)
+            return true;
+    }
+    return false;
+}
+
+bool mostrar_hasta_15(void* elemento, void* extra){
+    extra=extra; //para que no se queje el compilador, gracias -Werror -Wall
+    if(elemento){
+        printf("%i ", ((cosa*)elemento)->clave);
+        if(((cosa*)elemento)->clave == 15)
+            return true;
+    }
+    return false;
+}
+
+bool mostrar_hasta_9(void* elemento, void* extra){
+    extra=extra; //para que no se queje el compilador, gracias -Werror -Wall
+    if(elemento){
+        printf("%i ", ((cosa*)elemento)->clave);
+        if(((cosa*)elemento)->clave == 9)
+            return true;
+    }
+    return false;
+}
+
 bool mostrar_acumulado(void* elemento, void* extra){
     if(elemento && extra){
         *(int*)extra += ((cosa*)elemento)->clave;
@@ -132,12 +162,48 @@ int main(){
     abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, mostrar_hasta_5, NULL);
     printf("\n");
 
+    printf("\nRecorrido inorden hasta encontrar el 3: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, mostrar_hasta_3, NULL);
+    printf("\n");
+
+    printf("\nRecorrido inorden hasta encontrar el 15: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, mostrar_hasta_15, NULL);
+    printf("\n");
+
+    printf("\nRecorrido inorden hasta encontrar el 9: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, mostrar_hasta_9, NULL);
+    printf("\n");
+
     printf("Recorrido preorden hasta encontrar el 5: ");    
     abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, mostrar_hasta_5, NULL);
     printf("\n");
 
+    printf("Recorrido preorden hasta encontrar el 3: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, mostrar_hasta_3, NULL);
+    printf("\n");
+
+    printf("Recorrido preorden hasta encontrar el 15: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, mostrar_hasta_15, NULL);
+    printf("\n");
+
+    printf("Recorrido preorden hasta encontrar el 9: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, mostrar_hasta_9, NULL);
+    printf("\n");
+
     printf("Recorrido postorden hasta encontrar el 5: ");    
     abb_con_cada_elemento(arbol, ABB_RECORRER_POSTORDEN, mostrar_hasta_5, NULL);
+    printf("\n");
+
+    printf("Recorrido postorden hasta encontrar el 3: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_POSTORDEN, mostrar_hasta_3, NULL);
+    printf("\n");
+
+    printf("Recorrido postorden hasta encontrar el 15: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_POSTORDEN, mostrar_hasta_15, NULL);
+    printf("\n");
+
+    printf("Recorrido postorden hasta encontrar el 9: ");    
+    abb_con_cada_elemento(arbol, ABB_RECORRER_POSTORDEN, mostrar_hasta_9, NULL);
     printf("\n");
 
     int acumulador=0;
