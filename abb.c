@@ -1,5 +1,4 @@
 #include "abb.h"
-#include <stdio.h>
 
 static const int EXITO = 0;
 static const int ERROR = -1;
@@ -59,7 +58,7 @@ nodo_abb_t* insertar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador compar
 
 int arbol_insertar(abb_t* arbol, void* elemento) {
 
-	if ( !arbol || !elemento || !(arbol->comparador) )
+	if ( !arbol || !(arbol->comparador) )
 		return ERROR;
 
 	arbol->nodo_raiz = insertar_aux(arbol->nodo_raiz, elemento, arbol->comparador);
@@ -218,7 +217,7 @@ nodo_abb_t* borrar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparad
 
 int arbol_borrar(abb_t* arbol, void* elemento) {
 
-	if ( !arbol || !elemento || !(arbol->comparador) || !(arbol->destructor) )
+	if ( !arbol || !(arbol->comparador) || !(arbol->destructor) )
 		return ERROR;
 
 	if (arbol->nodo_raiz == NULL)
@@ -245,8 +244,6 @@ int arbol_borrar(abb_t* arbol, void* elemento) {
 void arbol_destruir(abb_t* arbol) {
 
 	if (!arbol)
-		return;
-	if (!(arbol->nodo_raiz))
 		return;
 
 	void* elemento;
