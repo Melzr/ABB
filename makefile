@@ -20,3 +20,4 @@ ejecutar: abb
 .PHONY: clean
 clean:
 	rm abb
+	rm abb2

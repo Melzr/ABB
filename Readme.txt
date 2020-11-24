@@ -14,7 +14,11 @@ INTRODUCCION
 
 COMPILACION:
 
+	Con minipruebas del enunciado:
 	gcc abb.c abb_minipruebas.c -o abb -g -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0
+
+	Con mis pruebas:
+	gcc abb.c pruebas.c -o abb -g -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0
 
 EJECUCION:
 

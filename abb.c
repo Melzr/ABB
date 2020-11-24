@@ -241,18 +241,29 @@ int arbol_borrar(abb_t* arbol, void* elemento) {
 	return ERROR;
 }
 
+/*
+ * Pre: recibe el nodo raiz y el destructor del arbol
+ * Post: destruye todos los elementos y nodos del arbol
+ */
+void destruir_aux(nodo_abb_t* nodo, abb_liberar_elemento destructor) {
+
+	if (!nodo) return;
+
+	if (nodo->izquierda != NULL)
+		destruir_aux(nodo->izquierda, destructor);
+
+	if (nodo->derecha != NULL)
+		destruir_aux(nodo->derecha, destructor);
+
+	destructor(nodo->elemento);
+	free(nodo);
+}
+
 void arbol_destruir(abb_t* arbol) {
 
-	if (!arbol)
-		return;
+	if (!arbol) return;
 
-	void* elemento;
-
-	while (!arbol_vacio(arbol)){
-		elemento = arbol->nodo_raiz->elemento;
-		arbol_borrar(arbol, elemento);
-	}
-
+	destruir_aux(arbol->nodo_raiz, arbol->destructor);
 	free(arbol);
 }
 
