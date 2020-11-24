@@ -2,9 +2,9 @@
 
 static const int EXITO = 0;
 static const int ERROR = -1;
-const int PRIMER_ELEMENTO_MAYOR = 1;
-const int PRIMER_ELEMENTO_MENOR = -1;
-const int IGUALES = 0;
+static const int PRIMER_ELEMENTO_MAYOR = 1;
+static const int PRIMER_ELEMENTO_MENOR = -1;
+static const int IGUALES = 0;
 
 
 abb_t* arbol_crear(abb_comparador comparador, abb_liberar_elemento destructor) {
