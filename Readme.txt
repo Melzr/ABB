@@ -1,9 +1,3 @@
-Un Readme.txt donde se deberá explicar qué es lo entregado y todo lo que crea necesario aclarar. 
-Adicionalmente el archivo debe poseer una sección donde se desarrollen los siguientes conceptos:
-• Explicar qué es un ABB y cómo se diferencia de un Árbol Binario.
-• Explicar cuál es el objetivo de tener una función de destrucción en el TDA y qué implicaría para el usuario
-no tenerla.
-• ¿Cuál es la complejidad de las diferentes operaciones del ABB? Justifique.
 
 INTRODUCCION
 
@@ -11,6 +5,7 @@ INTRODUCCION
 	abb_minipruebas.c y pruebas.c donde se desarrollo el testing del mismo.
 	Utilice en su mayoria funciones recursivas para la implementacion ya que simplifica mucho el entendimiento de las funciones al ser
 	el tipo de dato ABB recursivo por naturaleza. 
+
 
 COMPILACION:
 
@@ -20,12 +15,12 @@ COMPILACION:
 	Con mis pruebas:
 	gcc abb.c pruebas.c -o abb -g -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O0
 
+
 EJECUCION:
 
 	./abb
 
-CON VALGRIND:
-
+	Con Valgrind:
 	valgrind --leak-check=full --track-origins=yes --show-reachable=yes ./abb
 
 
@@ -38,13 +33,19 @@ DESARROLLO:
 		La diferencia con un Arbol Binario es que el ABB mantiene un orden: al moverme hacia la izquierda siempre encontrare un elemento menor al del
 		padre, y al moverme a la derecha este sera mayor. Esto permite reducir considerablemente la complejidad de los algoritmos.
 
+
 	Funcion de destruccion
+
+		El destructor sirve para liberar la memoria de los elementos contenidos en el arbol de ser necesario, de esta manera me aseguro que el TDA no
+		pierde memoria sin importar el tipo de dato que el usuario quiera almacenar. Para el usuario no tenerla implicaria que, para no perder memoria, 
+		deberia guardar todos los elementos en una estructura auxiliar a la que si tenga acceso para poder liberarlos, ocupando asi el doble de espacio 
+		en memoria y teniendo que volver a recorrer todos los elementos.
 
 
 	Complejidad de las operaciones
 
 		En el peor de los casos el arbol estara completamente desbalanceado, pareciendose a una lista, en este caso la complejidad de buscar, insertar
-		y borrar sera O(n). En el caso en que el arbol este mejor balanceado, la complejidad de estas operaciones se acercara a O(log(n)).
+		y borrar sera O(n). En el caso en que el arbol este balanceado, la complejidad de estas operaciones se acercara a O(log(n)).
 		Crear arbol siempre es O(1) pues aun no tiene elementos. Tambien lo seran arbol_raiz y arbol_vacio pues solo se opera con la raiz del arbol.
 		Destruir el arbol es O(n) pues tengo debo pararme en todos sus elementos para eliminarlos.
 		Recorrer inorden, postorden y preorden seran O(n) ya que se recorren todos los elementos a menos que el vector donde se cargan se llene. Mismo 

@@ -83,7 +83,8 @@ void pruebas_creacion() {
 	abb_t* arbol;
 
 	arbol = arbol_crear(comparador, NULL);
-	pa2m_afirmar(arbol == NULL, "No se puede crear un arbol sin destructor");
+	pa2m_afirmar(arbol != NULL, "Se puede crear un arbol sin destructor");
+	arbol_destruir(arbol);
 	arbol = arbol_crear(NULL, destructor);
 	pa2m_afirmar(arbol == NULL, "No se puede crear un arbol sin comparador");
 	arbol = arbol_crear(comparador, destructor);
@@ -105,7 +106,7 @@ void pruebas_insercion() {
 	pa2m_afirmar( arbol_insertar(NULL, pokemon) == ERROR, "No puedo insertar en un arbol nulo");
 	pa2m_afirmar( arbol_insertar(arbol, pokemon) == EXITO, "Puedo insertar en un arbol vacio");
 	pa2m_afirmar( arbol_raiz(arbol) == pokemon, "La raiz del arbol contiene al elemento insertado");
-	pa2m_afirmar( (arbol->nodo_raiz->izquierda == NULL) && (arbol->nodo_raiz->derecha == NULL), "No tiene elementos a su izquierda ni derecha" );
+	pa2m_afirmar( (arbol->nodo_raiz->izquierda == NULL) && (arbol->nodo_raiz->derecha == NULL), "No tiene elementos a su izquierda ni derecha");
 	pa2m_afirmar( arbol_vacio(arbol) == false, "El arbol no esta vacio");
 	pa2m_afirmar( arbol_buscar(arbol, pokemon) == pokemon, "Buscar el elemento insertado devuelve el elemento");
 
@@ -113,8 +114,9 @@ void pruebas_insercion() {
 	pokemon_t* pokemon3 = crear_pokemon(78, "Rapidash");
 	pa2m_afirmar( arbol_buscar(arbol, pokemon2) == NULL, "No se encuentra un elemento que no fue insertado" );
 	pa2m_afirmar( arbol_insertar(arbol, pokemon2) == EXITO, "Puedo insertar un elemento menor");
+	pa2m_afirmar( arbol->nodo_raiz->izquierda->elemento == (void*)pokemon2, "El hijo izquierdo de la raiz es el insertado");
+	pa2m_afirmar( arbol->nodo_raiz->derecha == NULL, "La raiz no tiene hijo derecho");
 	pa2m_afirmar( arbol_insertar(arbol, pokemon3) == EXITO, "Puedo insertar un elemento mayor");
-	pa2m_afirmar( (arbol->nodo_raiz->izquierda != NULL) && (arbol->nodo_raiz->izquierda->elemento == pokemon2), "El elemento menor esta a la izquierda");
 	pa2m_afirmar( (arbol->nodo_raiz->derecha != NULL) && (arbol->nodo_raiz->derecha->elemento == pokemon3), "El elemento mayor esta a la derecha");
 	pa2m_afirmar( (arbol->nodo_raiz->izquierda->izquierda == NULL) && (arbol->nodo_raiz->izquierda->derecha == NULL), "El nodo izquierdo no tiene hijos");
 	pa2m_afirmar( (arbol->nodo_raiz->derecha->izquierda == NULL) && (arbol->nodo_raiz->derecha->derecha == NULL), "El nodo derecho no tiene hijos");
@@ -177,7 +179,7 @@ void pruebas_borrar() {
 	pokemon = crear_pokemon(67, "Machoke");
 	pa2m_afirmar( arbol_buscar(arbol, pokemon) == NULL, "No se encuentra el elemento eliminado" );
 	pokemon_destruir(pokemon);
-	pa2m_afirmar( arbol_raiz(arbol) == pokemon2, "La raiz es ahora el mayor de los hijos menores de la raiz borrada");
+	pa2m_afirmar( arbol_raiz(arbol) == pokemon2, "La raiz es ahora su predecesor inorden");
 	pa2m_afirmar( arbol->nodo_raiz->izquierda->elemento == pokemon4, "El hijo menor de la nueva raiz es el que anteriormente era su padre");
 	pa2m_afirmar( arbol->nodo_raiz->derecha->elemento == pokemon3, "El hijo mayor de la nueva raiz es el hijo mayor de la anterior raiz");
 	
@@ -283,9 +285,9 @@ void pruebas_iterador() {
 		arbol_insertar(arbol, pokemones[i]);
 	}
 
-	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, es_meowth, NULL) == 4, "Iterador inorden recorre hasta que la funcion sea true");
-	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, es_meowth, NULL) == 4, "Iterador preorden recorre hasta que la funcion sea true");
-	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_POSTORDEN, es_meowth, NULL) == 3, "Iterador postorden recorre hasta que la funcion sea true");
+	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, es_meowth, NULL) == 5, "Iterador inorden recorre hasta que la funcion sea true");
+	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, es_meowth, NULL) == 5, "Iterador preorden recorre hasta que la funcion sea true");
+	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_POSTORDEN, es_meowth, NULL) == 4, "Iterador postorden recorre hasta que la funcion sea true");
 
 	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_INORDEN, es_psyduck, NULL) == 10, "Iterador inorden recorre todos los elementos");
 	pa2m_afirmar( abb_con_cada_elemento(arbol, ABB_RECORRER_PREORDEN, es_psyduck, NULL) == 10, "Iterador preorden recorre todos los elementos");

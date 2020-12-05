@@ -9,7 +9,7 @@ static const int IGUALES = 0;
 
 abb_t* arbol_crear(abb_comparador comparador, abb_liberar_elemento destructor) {
 
-	if ( !comparador || !destructor )
+	if (!comparador)
 		return NULL;
 
 	abb_t* arbol = calloc(1, sizeof(abb_t));
@@ -48,9 +48,9 @@ nodo_abb_t* insertar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador compar
 	}
 
 	int comparacion = comparador(raiz->elemento, elemento);
-	if (comparacion == PRIMER_ELEMENTO_MENOR)
+	if (comparacion <= PRIMER_ELEMENTO_MENOR)
 		raiz->derecha = insertar_aux(raiz->derecha, elemento, comparador);
-	else if ( (comparacion == PRIMER_ELEMENTO_MAYOR) || (comparacion == IGUALES) )
+	else if (comparacion >= IGUALES)
 		raiz->izquierda = insertar_aux(raiz->izquierda, elemento, comparador);
 
 	return raiz; 
@@ -77,10 +77,10 @@ void* buscar_aux(abb_comparador comparador, void* elemento, nodo_abb_t* raiz) {
 
 	int comparacion = comparador(raiz->elemento, elemento);
 
-	if ( comparacion == PRIMER_ELEMENTO_MAYOR ) 
+	if ( comparacion >= PRIMER_ELEMENTO_MAYOR ) 
 		return (buscar_aux(comparador, elemento, raiz->izquierda));
 	
-	if ( comparacion == PRIMER_ELEMENTO_MENOR )
+	if ( comparacion <= PRIMER_ELEMENTO_MENOR )
 		return (buscar_aux(comparador, elemento, raiz->derecha));
 
 	if (comparacion == IGUALES) {
@@ -99,7 +99,7 @@ void* arbol_buscar(abb_t* arbol, void* elemento) {
 }
 
 /*
- * Pre: recibe una raiz valida a partir de la cual se quiere conocer el elemento mayor de su rama
+ * Pre: recibe una raiz valida a partir de la cual se quiere conocer el elemento mayor de su rama (su predecesor inorden)
  *		recibe un puntero a nodo que se llenara con el nodo que tenga el mayor elemento de la rama (el que este mas a la derecha)
  * Post: llena el puntero a nodo_mayor y su padre queda apuntando a NULL o a su hijo menor en casod e que tenga
  */
@@ -125,11 +125,11 @@ nodo_abb_t* mayor_elemento_rama(nodo_abb_t* raiz, nodo_abb_t** nodo_mayor) {
  */
 nodo_abb_t* borrar_raiz(nodo_abb_t* raiz, abb_liberar_elemento destructor) {
 
-	if (!raiz || !destructor)
+	if (!raiz)
 		return NULL;
 
 	if (!raiz->izquierda && !raiz->derecha) {
-		destructor(raiz->elemento);
+		if(destructor != NULL) destructor(raiz->elemento);
 		free(raiz);
 		return NULL;
 	}
@@ -143,7 +143,7 @@ nodo_abb_t* borrar_raiz(nodo_abb_t* raiz, abb_liberar_elemento destructor) {
 		if (nodo_mayor != raiz->izquierda)
 			nodo_mayor->izquierda = raiz->izquierda;
 		nodo_mayor->derecha = raiz->derecha;
-		destructor(raiz->elemento);
+		if(destructor != NULL) destructor(raiz->elemento);
 		free(raiz);
 		raiz = nodo_mayor;
 		return raiz;
@@ -153,7 +153,7 @@ nodo_abb_t* borrar_raiz(nodo_abb_t* raiz, abb_liberar_elemento destructor) {
 	if (raiz->derecha != NULL)
 		nodo_aux = raiz->derecha;
 
-	destructor(raiz->elemento);
+	if(destructor != NULL) destructor(raiz->elemento);
 	free(raiz);
 	raiz = nodo_aux;
 	return raiz;
@@ -166,19 +166,19 @@ nodo_abb_t* borrar_raiz(nodo_abb_t* raiz, abb_liberar_elemento destructor) {
  */
 nodo_abb_t* borrar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparador, abb_liberar_elemento destructor, bool* borrado) {
 
-	if (!raiz || !comparador || !destructor) 
+	if (!raiz || !comparador ) 
 		return NULL;
 
 	int comparacion = comparador(raiz->elemento, elemento);
 
-	if (comparacion == PRIMER_ELEMENTO_MAYOR)
+	if (comparacion >= PRIMER_ELEMENTO_MAYOR)
 		raiz->izquierda = borrar_aux(raiz->izquierda, elemento, comparador, destructor, borrado);
-	else if (comparacion == PRIMER_ELEMENTO_MENOR)
+	else if (comparacion <= PRIMER_ELEMENTO_MENOR)
 		raiz->derecha = borrar_aux(raiz->derecha, elemento, comparador, destructor, borrado);
 	else {
 
 		if ( !(raiz->derecha) && !(raiz->izquierda) ) {
-			destructor(raiz->elemento);
+			if(destructor != NULL) destructor(raiz->elemento);
 			free(raiz);
 			raiz = NULL;
 			*borrado = true;
@@ -195,7 +195,7 @@ nodo_abb_t* borrar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparad
 				nodo_mayor->izquierda = raiz->izquierda;
 
 			nodo_mayor->derecha = raiz->derecha;
-			destructor(raiz->elemento);
+			if(destructor != NULL) destructor(raiz->elemento);
 			free(raiz);
 			raiz = nodo_mayor;
 			*borrado = true;
@@ -206,7 +206,7 @@ nodo_abb_t* borrar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparad
 		if (raiz->derecha != NULL)
 			nodo_aux = raiz->derecha;
 
-		destructor(raiz->elemento);
+		if(destructor != NULL) destructor(raiz->elemento);
 		free(raiz);
 		raiz = nodo_aux;
 		*borrado = true;
@@ -217,7 +217,7 @@ nodo_abb_t* borrar_aux(nodo_abb_t* raiz, void* elemento, abb_comparador comparad
 
 int arbol_borrar(abb_t* arbol, void* elemento) {
 
-	if ( !arbol || !(arbol->comparador) || !(arbol->destructor) )
+	if ( !arbol || !(arbol->comparador) )
 		return ERROR;
 
 	if (arbol->nodo_raiz == NULL)
@@ -255,7 +255,7 @@ void destruir_aux(nodo_abb_t* nodo, abb_liberar_elemento destructor) {
 	if (nodo->derecha != NULL)
 		destruir_aux(nodo->derecha, destructor);
 
-	destructor(nodo->elemento);
+	if(destructor != NULL) destructor(nodo->elemento);
 	free(nodo);
 }
 
@@ -398,13 +398,13 @@ size_t iterar_inorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(void
 	if (raiz->izquierda != NULL)
 		iterar_inorden(raiz->izquierda, recorridos, funcion, extra, parar);
 
+	if ((*parar) == false)
+		(*recorridos)++;
+
 	if ( (*parar == false) && funcion(raiz->elemento, extra) == true) {
 		*parar = true;
 		return *recorridos;
 	}
-
-	if ((*parar) == false)
-		(*recorridos)++;
 
 	if (raiz->derecha != NULL) 
 		iterar_inorden(raiz->derecha, recorridos, funcion, extra, parar);
@@ -421,13 +421,13 @@ size_t iterar_preorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(voi
 	if (!raiz || !funcion)
 		return 0;
 
+	if ((*parar) == false)
+		(*recorridos)++;
+
 	if ( (*parar == false) && funcion(raiz->elemento, extra) == true) {
 		*parar = true;
 		return *recorridos;
 	}
-
-	if ((*parar) == false)
-		(*recorridos)++;
 
 	if (raiz->izquierda != NULL)
 		iterar_preorden(raiz->izquierda, recorridos, funcion, extra, parar);
@@ -454,13 +454,13 @@ size_t iterar_postorden(nodo_abb_t* raiz, size_t *recorridos, bool (*funcion)(vo
 	if (raiz->derecha != NULL) 
 		iterar_postorden(raiz->derecha, recorridos, funcion, extra, parar);
 
+	if ((*parar) == false)
+		(*recorridos)++;
+
 	if ( (*parar == false) && funcion(raiz->elemento, extra) == true) {
 		*parar = true;
 		return *recorridos;
 	}
-
-	if ((*parar) == false)
-		(*recorridos)++;
 
 	return (*recorridos);
 }
